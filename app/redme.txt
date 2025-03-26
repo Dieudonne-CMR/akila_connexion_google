@@ -1,0 +1,5 @@
+mise ajour:
+10/07/2024
+--- Ajoute: precessigs/option_global.php
+--- dans index.php ajoute: option_global
+--- midifier home2.php
