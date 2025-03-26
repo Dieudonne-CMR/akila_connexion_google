@@ -34,6 +34,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         }elseif(empty($password)){
             $error="2";
         }else{
+            
             $rep=$Register->query("SELECT * FROM admin WHERE email=:mail AND password=:pass", array("mail"=>$email,"pass"=>$password));
            
            if(count($rep)>0){
@@ -64,7 +65,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         }
         echo $error;
     // }
-    
+
     //----------------------------------------inscrire
 
 }
