@@ -638,6 +638,7 @@ INSERT INTO `admin_entreprise2` (`id`, `matricule_admin`, `matricule_entreprise`
 --
 -- Structure de la table `blog`
 --
+
 CREATE TABLE `blog` (
   `id` int(11) NOT NULL,
   `photo` varchar(255) DEFAULT NULL,
@@ -645,8 +646,8 @@ CREATE TABLE `blog` (
   `sous_titre` varchar(255) NOT NULL,
   `content` text NOT NULL,
   `matricule` varchar(255) NOT NULL,
-  `date` date NOT NULL DEFAULT (CURRENT_DATE), -- Correction ici
-  `time` time NOT NULL DEFAULT (CURRENT_TIME), -- Correction ici
+  `date` date NOT NULL DEFAULT CURDATE(), -- Date actuelle uniquement
+  `time` time NOT NULL DEFAULT CURTIME(), -- Heure actuelle uniquement
   `datetime` datetime NOT NULL DEFAULT current_timestamp(),
   `id_categorie` varchar(20) NOT NULL,
   `categorie_magasine` int(11) NOT NULL,

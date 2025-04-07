@@ -1,5 +1,9 @@
 <?php 
-// session_start();
+session_start();
+include('../@ressouce/class.db.php');
+include('fonctions/auth-google/google-client.php');
+include('fonctions/auth-google/GoogleAuth.php') ;
+
 // // session_destroy();
 
 // include "../@ressouce/class.db.php";
@@ -15,6 +19,8 @@
 // include "processings/connection.php";
 
 // // var_dump($_POST['login']['password']);
+// Définir la source d'authentification comme étant la page de register
+$_SESSION['auth_source'] = 'register';
 
 ?>
 <!DOCTYPE html>
@@ -98,7 +104,7 @@
                   </div>
                   <div class="form-group">
                     <label class="col-form-label" for="email">Votre adresse Email</label>
-                    <input class="form-control" name="email" type="email" value="<?= @$_POST['email'] ?>" id="email" placeholder="Test@gmail.com">
+                    <input  class="form-control" name="email" type="email" value="<?= @$_POST['email'] ?>" id="email" placeholder="Test@gmail.com">
                   </div>
                   <div class="form-group">
                     <label class="col-form-label" for="pw">Mot de passe </label>
@@ -114,12 +120,16 @@
                       <div class="show-hide"><span class="show"></span></div>
                     </div>
                   </div>
+                  <div class="mt-3 text-center">
+                            <small class="text-muted">Un lien d'activation sera envoyé à votre adresse email</small>
+                        </div>       
                   <div class="form-group mb-0">
                     <div class="checkbox p-0">
                       <input id="checkbox1" type="checkbox" required name="check2">
                       <label class="text-muted" for="checkbox1">J'accepte les<a class="ms-2" href="#">Conditions d'utilisation</a></label>
                     </div>
                     <button class="btn btn-primary btn-block w-100"  name="enregistre" type="submit">Créez votre compte</button>
+                   
                   </div>
                   <?php /*
                   <h6 class="text-muted mt-4 or">Inscrire avec </h6>

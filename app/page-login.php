@@ -14,6 +14,12 @@
 
 // include "processings/connection.php";
 
+$googleAuth = new GoogleAuth(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI);
+$authUrl = $googleAuth->getAuthUrl();
+if(isset($_SESSION["id"])){
+    header("Location index.php");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -101,6 +107,7 @@
                       <label class="text-muted" for="checkbox1">Rappelle-toi de moi</label>
                     </div>
                     <button class="btn btn-primary btn-block w-100" name="connexion" type="submit">Connexion</button>
+                    <a href="<?php echo $authUrl; ?>" class="btn btn-primary btn-block w-100"  name="enregistre" type="submit">Se connecter avec Google</a>
                   </div>
                   <?php /*
                   <h6 class="text-muted mt-4 or">Connecter avec</h6>
