@@ -316,15 +316,5 @@ class EmailService {
         return $this->sendMail($email, $subject, $content, true);
     }
 
-    /**
-     * Envoie un email avec les identifiants de connexion à un nouveau membre
-     * 
-     * @param string $email Adresse email du destinataire
-     * @param string $firstName Prénom du membre
-     * @param string $lastName Nom du membre
-     * @param string $username Nom d'utilisateur généré
-     * @param string $password Mot de passe généré
-     * @return string Message de succès ou erreur
-     */
-    
+
 }
