@@ -144,7 +144,7 @@ if(isset($_SESSION["id"])){
           <div class="loader-text">Chargement en cours...</div>
         </div>
       </div>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
       <!-- latest jquery-->
       <script src="assets/js/jquery.min.js"></script>
       <!-- Bootstrap js-->
@@ -161,20 +161,20 @@ if(isset($_SESSION["id"])){
       <!-- Theme js-->
       <script src="assets/js/script.js"></script>
       <!-- Plugin used-->
-     
+     <!--  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 
 
       <script>
         $(document).ready(function() {
           // Fonction pour afficher/cacher le loader
-          function showLoader() {
+         /*  function showLoader() {
             $('#loader').addClass('active');
           }
           
           function hideLoader() {
             $('#loader').removeClass('active');
           }
-
+ */
           $('#connexion').submit(function(e) {
               e.preventDefault(); // Empêche le rechargement de la page
 
@@ -212,11 +212,10 @@ if(isset($_SESSION["id"])){
                 /*   hideLoader(); */
                   
                   console.log(response); // Affiche la réponse dans la console
-                  if (response === 'ok') {
+                  if (response === 'ok') {                 
+                              Swal.fire({
+                              icon: 'success',        
                   
-                    
-                          Swal.fire({
-                              icon: 'success',
                               title: 'Succès',
                               text: 'Un lien de connexion vous a été envoyé par email.',
                           }).then(() => {
@@ -244,7 +243,7 @@ if(isset($_SESSION["id"])){
                  
               }).fail(function(jqXHR, textStatus, errorThrown){
                   // Cacher le loader en cas d'erreur
-                  hideLoader();
+                 /*  hideLoader(); */
                   
                   // Gère les erreurs
                   console.error('Erreur lors de la requête AJAX:', textStatus, errorThrown);

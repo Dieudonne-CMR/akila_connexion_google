@@ -162,9 +162,9 @@ class EmailService {
                 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap');
                 
                 body { 
-                    font-family: 'Plus Jakarta Sans', Arial, sans-serif; 
+                    font-family: 'Plus Jakarta Sans', Arial, sans-serif !important; 
                     line-height: 1.6; 
-                    color: #2d3748;
+                    color: #2d3748 !important;
                     background-color: #f7fafc;
                     margin: 0;
                     padding: 0;
@@ -196,7 +196,7 @@ class EmailService {
                 .welcome-text {
                     font-size: 18px;
                     margin-bottom: 30px;
-                    color: #4a5568;
+                    color: #4a5568 !important;
                 }
                 .name {
                     font-weight: 700;
@@ -205,7 +205,7 @@ class EmailService {
                 .info {
                     margin: 30px 0;
                     font-size: 15px;
-                    color: #4a5568;
+                    color: #4a5568 !important;
                     padding: 20px;
                     background-color: #f8fafc;
                     border-radius: 12px;
@@ -218,7 +218,7 @@ class EmailService {
                 .btn {
                     display: inline-block;
                     background: linear-gradient(135deg, #4f46e5, #7c3aed);
-                    color: white;
+                    color: #fff !important;
                     padding: 16px 32px;
                     text-decoration: none;
                     border-radius: 12px;
@@ -237,7 +237,10 @@ class EmailService {
                     background-color: #f8fafc;
                     border-top: 1px solid #e2e8f0;
                     font-size: 14px;
-                    color: #4a5568;
+                    color: #4a5568 !important;
+                }
+                p{
+                    color:#000 !important;    
                 }
                 .footer p {
                     margin: 8px 0;
@@ -274,17 +277,17 @@ class EmailService {
                 }
                 .expiry-notice {
                     font-size: 14px;
-                    color: #718096;
+                    color: #718096 !important;
                     font-style: italic;
                     text-align: center;
                     margin-top: 20px;
                 }
-                .features {
+             /*    .features {
                     margin: 30px 0;
-                    display: grid;
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 20px;
-                }
+                    display: grid !important;
+                    grid-template-columns: repeat(2, 1fr) !important;
+                    gap: 20px !important;
+                } */
                 .feature-item {
                     background: #f8fafc;
                     padding: 15px;
@@ -311,7 +314,7 @@ class EmailService {
                     
                     $messageContent
                     
-                    <div class='features'>
+                    <div style='margin:30px 0; display:grid !important; grid-template-columns: repeat(2, 1fr) !important; gap:20px !important;'>
                         <div class='feature-item'>
                             <div class='feature-icon'>📝</div>
                             <p>Créez des blogs professionnels</p>
