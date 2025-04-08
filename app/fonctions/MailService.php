@@ -116,7 +116,7 @@ class EmailService {
         $token = $this->generateSecureToken($email);
         
         // Construire l'URL sécurisée
-        $baseUrl = "http://localhost/akila_connexion_google/app/processings"; // À remplacer par l'URL réelle
+        $baseUrl = in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1']) ? $_ENV['GOOGLE_REDIRECT_URI'] : $_ENV['GOOGLE_REDIRECT_URI_SERVER'];
         $verifyUrl = "$baseUrl/verify.php?token=$token&email=" . urlencode($email) . "&action=$action";
         
         // Stocker les données d'utilisateur en session si c'est une inscription
