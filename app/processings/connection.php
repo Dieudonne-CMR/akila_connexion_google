@@ -48,7 +48,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     // Envoyer l'email avec le lien magique
     try {
         $emailService = new EmailService();
-        $emailService->sendMagicLink($email, $rep[0]->nom, $rep[0]->prenom, 'login');
+        $emailService->sendMagicLink($email, $rep[0]->nom, 'login', [], $rep[0]->prenom);
         
         echo "ok"; // Le lien a été envoyé
     } catch (Exception $e) {

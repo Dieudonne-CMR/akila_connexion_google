@@ -213,6 +213,7 @@ $_SESSION['auth_source'] = 'register';
 
               // Envoie une requête POST avec les données du formulaire
               $.post(url, data, function(response) {
+                console.log(response)
                  // Cacher le loader une fois la réponse reçue
                  hideLoader();
 
@@ -225,8 +226,10 @@ $_SESSION['auth_source'] = 'register';
                           text: 'Un email de confirmation vous a été envoyé.',
                       }).then(() => {
                           window.location.href = 'verification-email.php';
+                          return;
                       });
-                  } if(response === '3'){
+                  } 
+                  if(response === '3'){
                     
                     Swal.fire({
                           icon: 'error',
@@ -253,6 +256,16 @@ $_SESSION['auth_source'] = 'register';
                           icon: 'error',
                           title: 'Une erreur',
                           text: 'Veuillez remplir tous les champs!',
+                      }).then(() => {
+                          // window.location.href = '@add-post';
+                      });
+                  }
+                  if(response === '4'){
+                    
+                    Swal.fire({
+                          icon: 'error',
+                          title: 'Une erreur',
+                          text: 'Une erreur est survenue lors de l\'envoi du lien.',
                       }).then(() => {
                           // window.location.href = '@add-post';
                       });

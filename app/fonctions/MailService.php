@@ -111,7 +111,7 @@ class EmailService {
      * @param PDO $bdd Connexion à la base de données
      * @return string Message de succès ou erreur
      */
-    public function sendMagicLink($email, $firstName, $lastName = '', $action, $userData = []) {
+    public function sendMagicLink($email, $firstName, $action,$userData = [], $lastName = '') {
         // Générer le token sécurisé
         $token = $this->generateSecureToken($email);
         
@@ -122,7 +122,10 @@ class EmailService {
         // Stocker les données d'utilisateur en session si c'est une inscription
         if ($action === 'register' && !empty($userData)) {
             // Sérialiser et encoder les données pour les stocker temporairement
-            session_start();
+             // Démarrer la session si elle n'est pas déjà démarrée
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();    
+            }
             $_SESSION['pending_registration_' . md5($email)] = $userData;
         }
         

@@ -1,9 +1,9 @@
 <?php
  // Démarrer la session si elle n'est pas déjà démarrée
-/*  if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+ if (session_status() === PHP_SESSION_NONE) {
+    session_start();    
 }
- */
+
 include "../../@ressouce/class.db.php";
 include "../../@ressouce/class.register.php";
 require "../fonctions/fonction.php";
@@ -49,13 +49,13 @@ $Register=new Register($db);
                 
                
                 // Stocker l'email et l'action pour la page de vérification
-                $_SESSION['verification_email'] = $email;
+                $_SESSION['verification_email'] = $userData['email'];
                 $_SESSION['verification_action'] = 'register';
                 $_SESSION['verification_user_data'] = $userData;
                 
                 // Envoyer l'email avec le lien magique
                 $emailService = new EmailService();
-                $emailService->sendMagicLink($email, $nom, $prenom, 'register', $userData);
+                $emailService->sendMagicLink($email, $nom, 'register', $userData, $prenom);
                 
                 echo 'ok';
                 exit;
