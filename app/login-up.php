@@ -81,7 +81,7 @@ $_SESSION['auth_source'] = 'register';
                 <div>
                   <a class="logo" href="javascript:void(0)"><img class="img-fluid for-light" src="assets/images/logo/logo_light1.png" alt="looginpage"><img class="img-fluid for-dark" src="assets/images/logo/logo_dark.png" alt="looginpage"></a>
                 </div>
-                <form class="theme-form needs-validation" action="" id="incription" method="post">
+                <form class="theme-form needs-validation" action="post" id="incription">
                   <h4>Créez votre compte</h4>  
                   <p>Entrez Nos information pour la création de votre compte</p>
                   <p><?= ''//erreur($data) ?></p>
@@ -90,33 +90,33 @@ $_SESSION['auth_source'] = 'register';
                     <div class="row g-2">
                       <div class="col-6">
                         <label class="col-form-label pt-0" for="nom">Votre nom</label>
-                        <input class="form-control" type="text" id="nom" name="nom" value="<?= @$_POST['nom'] ?>" required="" placeholder="Entrez votre nom">
+                        <input class="form-control" type="text" id="nom" name="nom" placeholder="Entrez votre nom">
                       </div>
                       <div class="col-6">
-                      <label class="col-form-label pt-0" for="nom">Votre prenom</label>
-                        <input class="form-control" type="text" id="dnom" name="prenom" value="<?= @$_POST['prenom'] ?>" required="" placeholder="Entrez Prénom">
+                      <label class="col-form-label pt-0" for="nom">Votre prenom<label>
+                        <input class="form-control" type="text" id="dnom" name="prenom" placeholder="Entrez Prénom">
                       </div> 
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="col-form-label" for="telephone">Votre numero de téléphone Whatsapp</label>
-                    <input class="form-control" name="telephone" type="number" value="<?= @$_POST['telephone'] ?>" id="telephone" placeholder="2376999999">
+                    <input class="form-control" name="telephone" type="number" id="telephone" placeholder="2376999999">
                   </div>
                   <div class="form-group">
                     <label class="col-form-label" for="email">Votre adresse Email</label>
-                    <input  class="form-control" name="email" type="email" value="<?= @$_POST['email'] ?>" id="email" placeholder="Test@gmail.com">
+                    <input  class="form-control" name="email" type="email" id="email" placeholder="Test@gmail.com">
                   </div>
                   <div class="form-group">
                     <label class="col-form-label" for="pw">Mot de passe </label>
                     <div class="form-input position-relative">
-                      <input class="form-control" type="password" id="pw" value="<?= @$_POST['login']['password'] ?>" name="login[password]" required="" placeholder="*********">
+                      <input class="form-control" type="password" id="pw" name="password" placeholder="*********">
                       <div class="show-hide"><span class="show"></span></div>
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="col-form-label" for="pw">Comfirmer le mot de passe</label>
                     <div class="form-input position-relative">
-                      <input class="form-control" type="password" id="pw" name="loginCom[passconfirm]"required="" placeholder="">
+                      <input class="form-control" type="password" id="pw" name="passconfirm" placeholder="">
                       <div class="show-hide"><span class="show"></span></div>
                     </div>
                   </div>
@@ -128,7 +128,7 @@ $_SESSION['auth_source'] = 'register';
                       <input id="checkbox1" type="checkbox" required name="check2">
                       <label class="text-muted" for="checkbox1">J'accepte les<a class="ms-2" href="#">Conditions d'utilisation</a></label>
                     </div>
-                    <button class="btn btn-primary btn-block w-100"  name="enregistre" type="submit">Créez votre compte</button>
+                
                    
                   </div>
                   <?php /*
@@ -136,11 +136,20 @@ $_SESSION['auth_source'] = 'register';
                   <div class="social mt-4">
                     <div class="btn-showcase"><a class="btn btn-light" href="https://www.linkedin.com/login" target="_blank"><i class="txt-linkedin" data-feather="linkedin"></i> LinkedIn </a><a class="btn btn-light" href="https://twitter.com/login?lang=en" target="_blank"><i class="txt-twitter" data-feather="twitter"></i>twitter</a><a class="btn btn-light" href="https://www.facebook.com/" target="_blank"><i class="txt-fb" data-feather="facebook"></i>facebook</a></div>
                   </div> */?>
-                  <p class="mt-4 mb-0">Vous avez un compte ?<a class="ms-2" href="page-login.php">Se connecter</a></p>
+                   <button id="inscription" class="btn btn-primary btn-block w-100"  type="submit">Créez votre compte</button>
                 </form>
+              
+                <p class="mt-4 mb-0">Vous avez un compte ?<a class="ms-2" href="page-login.php">Se connecter</a></p>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+         <!-- Loader HTML -->
+         <div class="loader-overlay" id="loader">
+        <div class="loader">
+          <div class="loader-spinner"></div>
+          <div class="loader-text">Chargement en cours...</div>
         </div>
       </div>
       <!-- latest jquery-->
@@ -161,16 +170,26 @@ $_SESSION['auth_source'] = 'register';
       <!-- Plugin used-->
       <script>
         $(document).ready(function() {
+            // Fonction pour afficher/cacher le loader
+            function showLoader() {
+            $('#loader').addClass('active');
+          }
+          
+          function hideLoader() {
+            $('#loader').removeClass('active');
+          }
           $('#incription').submit(function(e) {
+            
               e.preventDefault(); // Empêche le rechargement de la page
 
               var $form = $(this);
+              console.log($form)	
               var data = $form.serialize(); // Sérialise les données du formulaire
               var url = 'processings/inscription.php'; // URL du script PHP
 
               // Vérification des champs non vides
               var isValid = true;
-              $form.find('input, textarea, select').each(function() {
+              $form.find('input').each(function() {
                   var $this = $(this);
                   if ($(this).val() === null || $(this).val().trim() === '') {
                       isValid = false;
@@ -181,6 +200,7 @@ $_SESSION['auth_source'] = 'register';
               });
 
               if (!isValid) {
+               
                   Swal.fire({
                       icon: 'error',
                       title: 'Erreur',
@@ -188,19 +208,26 @@ $_SESSION['auth_source'] = 'register';
                   });
                   return; // Empêche l'envoi de la requête AJAX si des champs sont vides
               }
+                // Afficher le loader avant l'envoi de la requête
+                showLoader();
 
               // Envoie une requête POST avec les données du formulaire
               $.post(url, data, function(response) {
-                  // console.log(response); // Affiche la réponse dans la console
+                 // Cacher le loader une fois la réponse reçue
+                 hideLoader();
+
+           
                   if (response === 'ok') {
+                  
                       Swal.fire({
                           icon: 'success',
                           title: 'Succès',
-                          text: 'Inscription réussie !',
+                          text: 'Un email de confirmation vous a été envoyé.',
                       }).then(() => {
-                          window.location.href = 'login-login.php';
+                          window.location.href = 'verification-email.php';
                       });
                   } if(response === '3'){
+                    
                     Swal.fire({
                           icon: 'error',
                           title: 'Une erreur',
@@ -211,6 +238,7 @@ $_SESSION['auth_source'] = 'register';
                   }
 
                   if(response === '1'){
+                    
                     Swal.fire({
                           icon: 'error',
                           title: 'Ce compte existe',
@@ -220,6 +248,7 @@ $_SESSION['auth_source'] = 'register';
                       });
                   }
                   if(response === '2'){
+                  
                     Swal.fire({
                           icon: 'error',
                           title: 'Une erreur',
@@ -229,6 +258,11 @@ $_SESSION['auth_source'] = 'register';
                       });
                   }
               }).fail(function(jqXHR, textStatus, errorThrown){
+                   // Cacher le loader en cas d'erreur
+                   hideLoader();
+                    /* jqXHR.responseJSON.errors.forEach(function(error) {
+                    console.log(error.message);
+                    }); */
                   // Gère les erreurs
                   console.error('Erreur lors de la requête AJAX:', textStatus, errorThrown);
                   Swal.fire({

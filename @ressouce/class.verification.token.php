@@ -1,5 +1,5 @@
 <?php
-include "class.db.php";
+include_once "class.db.php";
 
 class VerificationToken {
     private $conn;
@@ -41,6 +41,14 @@ class VerificationToken {
         $deleteStmt->execute([$email, $token]);
         
         return true;
+    }
+    /**
+     * Supprime le token d'un utilisateur
+     */
+
+    public function deleteTokenExpiresFromUser($email) {
+        $stmt = $this->conn->prepare("DELETE FROM verification_token WHERE identifier = ? AND expires < NOW()");
+        $stmt->execute([$email]);
     }
 
     /**

@@ -1,4 +1,6 @@
-<?php 
+<?php
+include("fonctions/auth-google/GoogleAuth.php");
+include ("fonctions/auth-google/google-client.php");
 // session_start();
 // // session_destroy();
 
@@ -58,7 +60,8 @@ if(isset($_SESSION["id"])){
     <link id="color" rel="stylesheet" href="assets/css/color-1.css" media="screen">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="assets/css/responsive.css">
-
+    <!-- Loader css -->
+    <link rel="stylesheet" type="text/css" href="assets/css/loader.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -68,6 +71,29 @@ if(isset($_SESSION["id"])){
     max-width: 50%;
     height: auto;
 }
+    .or-divider {
+      position: relative;
+      text-align: center;
+      margin: 15px 0;
+    }
+    .or-divider:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #e0e0e0;
+      z-index: 1;
+    }
+    .or-divider span {
+      display: inline-block;
+      position: relative;
+      padding: 0 10px;
+      background-color: #fff;
+      color: #999;
+      z-index: 2;
+    }
     </style>
   <body>
     <!-- login page start-->
@@ -79,10 +105,10 @@ if(isset($_SESSION["id"])){
             <div>
              
               <div class="login-main"> 
-                <form class="theme-form" id="connexion" method="post">
+                <form class="theme-form" id="connexion">
                      <div><a class="logo text-start" href="index.html"><img class="img-fluid for-light" src="assets/images/logo/logo_light1.png" alt="looginpage"><img class="img-fluid for-dark" src="assets/images/logo/logo_dark.png" alt="looginpage"></a></div> 
-                  <h4>Informations personnelle</h4>
-                  <p>Entrer votre adresse email et votre mot de passe</p>
+                  <h4>Entrer votre adresse email</h4>
+                 
                   <p><?= ''// erreur(@$_SESSION['a']); unset($_SESSION['a']) ?></p>
                   <?php /* if(!empty($rror)):?>
                     <div class="alert alert-light-danger" role="alert">
@@ -91,37 +117,34 @@ if(isset($_SESSION["id"])){
                   <?php endif */?>
                   <div class="form-group">
                     <label class="col-form-label">Addresse Email</label>
-                    <input class="form-control" name="email" type="email" required="" placeholder="Test@gmail.com">
+                    <input class="form-control" name="email" type="email" placeholder="Test@gmail.com">
                   </div>
-                  <div class="form-group">
-                    <label class="col-form-label">Mot des passe</label>
-                    <div class="form-input position-relative">
-                      <input class="form-control" type="password" name="login[password]" required="" placeholder="*********">
-                      <div class="show-hide"><span class="show">                         </span></div>
-                    </div>
-                  </div>
-                  inpu
-                  <div class="form-group mb-0">
-                    <div class="checkbox p-0">
-                      <input id="checkbox1" type="checkbox">
-                      <label class="text-muted" for="checkbox1">Rappelle-toi de moi</label>
-                    </div>
-                    <button class="btn btn-primary btn-block w-100" name="connexion" type="submit">Connexion</button>
-                    <a href="<?php echo $authUrl; ?>" class="btn btn-primary btn-block w-100"  name="enregistre" type="submit">Se connecter avec Google</a>
-                  </div>
-                  <?php /*
-                  <h6 class="text-muted mt-4 or">Connecter avec</h6>
-                  <div class="social mt-4">
-                    <div class="btn-showcase"><a class="btn btn-light" href="https://www.linkedin.com/login" target="_blank"><i class="txt-linkedin" data-feather="linkedin"></i> LinkedIn </a><a class="btn btn-light" href="https://twitter.com/login?lang=en" target="_blank"><i class="txt-twitter" data-feather="twitter"></i>twitter</a><a class="btn btn-light" href="https://www.facebook.com/" target="_blank"><i class="txt-fb" data-feather="facebook"></i>facebook</a></div>
-                  </div>
-                  */?>
-                  <p class="mt-4 mb-0 text-center">Je n'ai pas de compte<a class="ms-2" href="login-up.php">Créer votre compte</a></p>
+                  
+                 <!--  <div class="form-group mb-0"> -->
+                 <button class="btn btn-primary btn-block w-100" type="submit">Recevoir un lien de connexion</button>
                 </form>
+              
+                    <p class="text-center mt-3 mb-3 or-divider"><span>ou</span></p>
+                    <a href="<?php echo $authUrl; ?>" class="btn btn-info btn-block w-100" type="button">
+                      <i class="fa fa-google mr-2"></i> Se connecter avec Google
+                    </a>
+                  </div>
+              
+                  <p class="mt-4 mb-0 text-center">Je n'ai pas de compte<a class="ms-2" href="login-up.php">Créer votre compte</a></p>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Loader HTML -->
+      <div class="loader-overlay" id="loader">
+        <div class="loader">
+          <div class="loader-spinner"></div>
+          <div class="loader-text">Chargement en cours...</div>
+        </div>
+      </div>
+      
       <!-- latest jquery-->
       <script src="assets/js/jquery.min.js"></script>
       <!-- Bootstrap js-->
@@ -141,6 +164,15 @@ if(isset($_SESSION["id"])){
 
       <script>
         $(document).ready(function() {
+          // Fonction pour afficher/cacher le loader
+          function showLoader() {
+            $('#loader').addClass('active');
+          }
+          
+          function hideLoader() {
+            $('#loader').removeClass('active');
+          }
+
           $('#connexion').submit(function(e) {
               e.preventDefault(); // Empêche le rechargement de la page
 
@@ -150,7 +182,7 @@ if(isset($_SESSION["id"])){
 
               // Vérification des champs non vides
               var isValid = true;
-              $form.find('input, textarea, select').each(function() {
+              $form.find('input').each(function() {
                   var $this = $(this);
                   if ($(this).val() === null || $(this).val().trim() === '') {
                       isValid = false;
@@ -164,21 +196,27 @@ if(isset($_SESSION["id"])){
                   Swal.fire({
                       icon: 'error',
                       title: 'Erreur',
-                      text: 'Veuillez remplir tous les champs.',
+                      text: "Veuillez remplir l'adresse email",
                   });
                   return; // Empêche l'envoi de la requête AJAX si des champs sont vides
               }
 
+              // Afficher le loader avant l'envoi de la requête
+              showLoader();
+
               // Envoie une requête POST avec les données du formulaire
               $.post(url, data, function(response) {
+                  // Cacher le loader une fois la réponse reçue
+                  hideLoader();
+                  
                   console.log(response); // Affiche la réponse dans la console
                   if (response === 'ok') {
                       Swal.fire({
                           icon: 'success',
                           title: 'Succès',
-                          text: 'Connexion réussie !',
+                          text: 'Un lien de connexion vous a été envoyé par email.',
                       }).then(() => {
-                          window.location.href = 'home';
+                          window.location.href = 'verification-email.php';
                       });
                   } 
 
@@ -186,11 +224,22 @@ if(isset($_SESSION["id"])){
                       Swal.fire({
                         icon: 'error',
                         title: 'Erreur',
-                        text: 'Vos informations sont incorrect.',
+                        text: 'Cet email n\'est pas enregistré.',
                       })
                   } 
+                  
+                  if (response === '3') {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur',
+                        text: 'Erreur lors de l\'envoi de l\'email. Veuillez réessayer.',
+                      })
+                  }
                  
               }).fail(function(jqXHR, textStatus, errorThrown){
+                  // Cacher le loader en cas d'erreur
+                  hideLoader();
+                  
                   // Gère les erreurs
                   console.error('Erreur lors de la requête AJAX:', textStatus, errorThrown);
                   Swal.fire({

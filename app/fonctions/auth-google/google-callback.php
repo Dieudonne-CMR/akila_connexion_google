@@ -1,9 +1,6 @@
 <?php
 // Initialiser la session
 session_start();
-
-include ('../../../@ressouce/class.db.php');
-include ("../../functions/function_user.php");
 include ("../../helpers/Session.php");
 include ("../../../@ressouce/class.admin.php");
 include ('google-client.php');
@@ -11,19 +8,16 @@ include ('GoogleAuth.php');
 
 
 
-unset($_SESSION['google_session']);
+
 // Vérifier s'il y a un code d'autorisation dans l'URL
 if (!isset($_GET['code'])) {
     // Rediriger vers la page d'inscription si aucun code n'est présent
-    header('Location: app/login-up.php');
+    header('Location: ../../login-up.php');
     exit;
 }
 
 // Récupérer le code d'autorisation
 $authCode = $_GET['code'];
-
-// Vérifier si on vient de la page de login
-$isFromLogin = isset($_SESSION['auth_source']) && $_SESSION['auth_source'] === 'login';
 
 try {
     // Initialiser l'authentification Google
@@ -50,7 +44,39 @@ try {
     if (!isset($email)) {
         throw new Exception("L'adresse email est manquante dans les informations Google");
     }
-    ddddddddddddddd
+    $admin = new admin();
+    $user = $admin->createOrUpdateFromGoogle($userInfo);
+    if (!$user) {
+        throw new Exception("Impossible d'authentifier l'utilisateur à travers Google");
+    }
+ 
+   
+  
+    // L'utilisateur existe déjà, le connecter directement
+   
+               $_SESSION['skl']=[
+                    'id'=>$user["id"],
+                   'nom'=>$user["nom"],
+                   'prenom'=>$user["prenom"],
+                   'email'=>$user["email"],
+                   'supadmin'=>$user["sup_admin"],
+                   'telephone'=>$user["telephone"],
+                   'ville'=>$user["ville"],
+                   'password'=>$user["password"],
+                   'active'=>$user["active"],
+                   'matricule_admin'=>$user["matricule_admin"],
+                   'matricule_akila_blog'=>$user["matricule_akila_blog"],
+                   'permission'=>$user["permission"],
+                   'inscrit'=>$user["inscrit"]                   
+
+               ];
+              /*  var_dump(isset($_SESSION['skl'])); */
+    //login($user);
+    
+    
+    header('Location: ../../index.php');
+    exit;
+   
    
 } catch (Exception $e) {
     // Rediriger vers la page d'erreur avec le message

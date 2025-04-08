@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../models/UserModel.php';
 /**
  * Helper pour gérer l'authentification des utilisateurs
  */
@@ -57,7 +56,7 @@ class AuthHelper {
      */
     public static function isLoggedIn() {
       self::init();
-      return isset($_SESSION['user']);
+      return isset($_SESSION['skl']);
     }
     
     /**
@@ -69,9 +68,9 @@ class AuthHelper {
       self::init();
       //$userModel = new UserModel();
       
-      if (isset($_SESSION['user'])) {
+      if (isset($_SESSION['skl'])) {
       // Récupérer l'utilisateur de la base de données          
-      return $_SESSION["user"] ?? null;
+      return $_SESSION["skl"] ?? null;
     
       }
       return null;
@@ -110,7 +109,7 @@ class AuthHelper {
      * @param string $redirect URL de redirection si non connecté
      * @return void
      */
-    public static function requireLogin($redirect = '/app/page-login.php') {
+    public static function requireLogin($redirect = '../page-login.php') {
         if (!self::isLoggedIn()) {
             self::redirect($redirect);
         }

@@ -1,5 +1,5 @@
 <?php
-include '../../@ressouce/class.db.php';
+include_once '../../@ressouce/class.db.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require_once "../../vendor/autoload.php";
@@ -111,12 +111,12 @@ class EmailService {
      * @param PDO $bdd Connexion à la base de données
      * @return string Message de succès ou erreur
      */
-    public function sendMagicLink($email, $firstName, $lastName = '', $action, $userData = [], $bdd) {
+    public function sendMagicLink($email, $firstName, $lastName = '', $action, $userData = []) {
         // Générer le token sécurisé
         $token = $this->generateSecureToken($email);
         
         // Construire l'URL sécurisée
-        $baseUrl = "https://localhost:3000"; // À remplacer par l'URL réelle
+        $baseUrl = "http://localhost/akila_connexion_google/app/processings"; // À remplacer par l'URL réelle
         $verifyUrl = "$baseUrl/verify.php?token=$token&email=" . urlencode($email) . "&action=$action";
         
         // Stocker les données d'utilisateur en session si c'est une inscription

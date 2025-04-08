@@ -1,8 +1,9 @@
 <?php 
 
 session_start();
-include "../../@ressouce/class.db.php";
-include "../../@ressouce/class.register.php";
+include_once "../../@ressouce/class.db.php";
+include_once "../../@ressouce/class.register.php";
+include "../fonctions/MailService.php";
 require "../fonctions/fonction.php";
 $DB=new DB();
 $db=$DB->db; // connexion a la base de donnee 
@@ -20,52 +21,39 @@ if(!empty($_SERVER['HTTP_CLIENT_IP'])){
   $today = date("F j, Y");  
 
 //   var_dump($_POST);
-//----------------------------verifiavttion pour la inscription
+//----------------------------verification pour la connexion
 if($_SERVER["REQUEST_METHOD"]=="POST"){
     extract($_POST);
     
-    // if(isset($connexion)){
-        $email= test_input($email);
-       $password = test_input(md5($_POST['login']['password']));
+    $email = test_input($email);
+    
+    if(empty($email)){
+        echo "1"; // Email vide
+        exit;
+    }
+    
+    // Vérifier si l'utilisateur existe dans la base de données
+    $rep = $Register->query("SELECT * FROM admin WHERE email=:mail", array("mail" => $email));
+    
+    if(count($rep) == 0) {
+        echo "2"; // Utilisateur non trouvé
+        exit;
+    }
+    
+    // Au lieu de vérifier le mot de passe, nous allons envoyer un lien magique par email
+    // Stocker l'email et l'action pour la page de vérification
+    $_SESSION['verification_email'] = $email;
+    $_SESSION['verification_action'] = 'login';
+    
+    // Envoyer l'email avec le lien magique
+    try {
+        $emailService = new EmailService();
+        $emailService->sendMagicLink($email, $rep[0]->nom, $rep[0]->prenom, 'login');
         
-     
-       if(empty($email)){
-            $error="1";
-        }elseif(empty($password)){
-            $error="2";
-        }else{
-            
-            $rep=$Register->query("SELECT * FROM admin WHERE email=:mail AND password=:pass", array("mail"=>$email,"pass"=>$password));
-           
-           if(count($rep)>0){
-               $_SESSION['skl']=[];
-               $_SESSION['skl']=[
-                    'id'=>$rep[0]->id,
-                   'nom'=>$rep[0]->nom,
-                   'prenom'=>$rep[0]->prenom,
-                   'email'=>$rep[0]->email,
-                   'supadmin'=>$rep[0]->sup_admin,
-                   'telephone'=>$rep[0]->telephone,
-                   'ville'=>$rep[0]->ville,
-                   'password'=>$rep[0]->password,
-                   'active'=>$rep[0]->active,
-                   'matricule_admin'=>$rep[0]->matricule_admin,
-                   'matricule_akila_blog'=>$rep[0]->matricule_akila_blog,
-                   'permission'=>$rep[0]->permission,
-                   'inscrit'=>$rep[0]->inscrit
-
-               ];
-
-            //    notifications("Vient de se connecter"); 
-               $error='ok';
-            //    header("location: home");
-           }else{
-               $error="2";
-           }
-        }
-        echo $error;
-    // }
-
-    //----------------------------------------inscrire
-
+        echo "ok"; // Le lien a été envoyé
+    } catch (Exception $e) {
+        echo "3"; // Erreur lors de l'envoi du mail
+    }
+    
+    exit;
 }

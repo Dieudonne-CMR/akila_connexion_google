@@ -2,7 +2,7 @@
 // session_destroy();
 // var_dump($_SESSION['skl']['nom'], $_SESSION['skl']['supadmin'] );
    if(!isset($_SESSION['skl']['nom']) & empty($_SESSION['skl']['nom']) AND !isset($_SESSION['skl']['supadmin']) & empty($_SESSION['skl']['supadmin'])){
-       header('location: page-login.php');
+       header('location: ../../page-login.php');
     }else{
        
        include "../@ressouce/class.db.php";
@@ -56,6 +56,10 @@
             $data1 = $Register->query("SELECT matricule_entreprise FROM website WHERE
                matricule_admin=:matricule ", array("matricule" => $matricule_ad)); // recupere toutes les entreprises que gere un administrateurs
             //======= fonction qui permet les information de l'entreprise du gerant et l'entreprise du proprietaire ensemble    
+              // les matricules des entreprises que suit un gerant
+              $data = ajouterElements($matricule_entretrise_gerant, $data1); // les matricules des entreprises que suit un gerant
+              //========== fin de 01/07/2024 
+              // var_dump(@$data);
             function ajouterElements($data, $data1) {
                foreach ($data1 as $element) {
                   // var_dump($element->matricule_entreprise);
@@ -64,10 +68,7 @@
                return $data;
            }
          }
-            // les matricules des entreprises que suit un gerant
-            $data = ajouterElements($matricule_entretrise_gerant, $data1); // les matricules des entreprises que suit un gerant
-            //========== fin de 01/07/2024 
-            // var_dump(@$data);
+          
         
       endif;
       // var_dump($data);

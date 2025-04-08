@@ -1,6 +1,5 @@
 <?php
-include "class.db.php";
-
+include_once "class.db.php";
 
 /**
  * Classe pour gérer les utilisateurs

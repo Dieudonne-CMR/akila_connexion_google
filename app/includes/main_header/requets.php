@@ -1,4 +1,42 @@
 <?php
+/* 
+
+// Vérifier si l'utilisateur est connecté
+if (!isset($_SESSION['skl']) || empty($_SESSION['skl'])) {
+    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+    header("Location: ../../page-login.php");
+    exit;
+}
+
+// Récupérer les informations de l'utilisateur connecté
+$id = $_SESSION['skl']['id'] ?? null;
+$nom = $_SESSION['skl']['nom'] ?? '';
+$prenom = $_SESSION['skl']['prenom'] ?? '';
+$email = $_SESSION['skl']['email'] ?? '';
+$supadmin = $_SESSION['skl']['supadmin'] ?? 0;
+$telephone = $_SESSION['skl']['telephone'] ?? '';
+$ville = $_SESSION['skl']['ville'] ?? '';
+$active = $_SESSION['skl']['active'] ?? 0;
+$matricule_admin = $_SESSION['skl']['matricule_admin'] ?? '';
+$matricule_akila_blog = $_SESSION['skl']['matricule_akila_blog'] ?? '';
+$permission = $_SESSION['skl']['permission'] ?? 0;
+$inscrit = $_SESSION['skl']['inscrit'] ?? '';
+
+// Vérifier si le compte est actif
+if ($active != 1) {
+    // Déconnecter l'utilisateur si son compte n'est pas actif
+    session_unset();
+    session_destroy();
+    
+    // Rediriger avec un message d'erreur
+    $_SESSION['error_message'] = "Votre compte n'est pas actif. Veuillez contacter l'administrateur.";
+    header("Location: page-login.php");
+    exit;
+}
+
+// Autres vérifications ou initialisations peuvent être ajoutées ici
+$is_shop = 0; // Valeur par défaut pour $is_shop
+ */
 require("includes/main_header/main_header.php");
 require("fonctions/fonction.php");
 require("fonctions/email_noticication.php");
