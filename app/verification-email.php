@@ -1,12 +1,11 @@
 <?php
 session_start();
-var_dump($_SESSION['verification_email']);
-var_dump($_SESSION['verification_action']);
+
 // Vérifier si l'email est présent en session
-/* if (!isset($_SESSION['verification_email'])) {
+if (!isset($_SESSION['verification_email'])) {
     header('Location: page-login.php');
     exit;
-} */
+}
 if(isset($_SESSION["shl"])){
     header('Location: index.php');
     exit;
