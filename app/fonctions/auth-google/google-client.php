@@ -13,4 +13,5 @@ $dotenv->load();
 define('GOOGLE_CLIENT_ID', $_ENV['GOOGLE_CLIENT_ID']);
 define('GOOGLE_CLIENT_SECRET', $_ENV['GOOGLE_CLIENT_SECRET']);
 define('GOOGLE_REDIRECT_URI', in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1']) ? $_ENV['GOOGLE_REDIRECT_URI'] : $_ENV['GOOGLE_REDIRECT_URI_SERVER']);
+define("BASE_URL", in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1']) ? "http://localhost/akila_connexion_google" : "https://app.akila.blog");
 

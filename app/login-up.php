@@ -63,6 +63,8 @@ $_SESSION['auth_source'] = 'register';
     <link id="color" rel="stylesheet" href="assets/css/color-1.css" media="screen">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="assets/css/responsive.css">
+      <!-- Loader css -->
+      <link rel="stylesheet" type="text/css" href="assets/css/loader.css">
   </head>
   <body>
     <style>
@@ -213,20 +215,20 @@ $_SESSION['auth_source'] = 'register';
 
               // Envoie une requête POST avec les données du formulaire
               $.post(url, data, function(response) {
-                console.log(response)
+                /* console.log(response) */
                  // Cacher le loader une fois la réponse reçue
-                 hideLoader();
+                hideLoader(); 
 
-           
+           console.log(response)
                   if (response === 'ok') {
-                  
+                
                       Swal.fire({
                           icon: 'success',
                           title: 'Succès',
                           text: 'Un email de confirmation vous a été envoyé.',
                       }).then(() => {
                           window.location.href = 'verification-email.php';
-                          return;
+                          
                       });
                   } 
                   if(response === '3'){

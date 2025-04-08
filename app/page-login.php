@@ -144,7 +144,7 @@ if(isset($_SESSION["id"])){
           <div class="loader-text">Chargement en cours...</div>
         </div>
       </div>
-      
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <!-- latest jquery-->
       <script src="assets/js/jquery.min.js"></script>
       <!-- Bootstrap js-->
@@ -161,6 +161,8 @@ if(isset($_SESSION["id"])){
       <!-- Theme js-->
       <script src="assets/js/script.js"></script>
       <!-- Plugin used-->
+     
+
 
       <script>
         $(document).ready(function() {
@@ -202,22 +204,25 @@ if(isset($_SESSION["id"])){
               }
 
               // Afficher le loader avant l'envoi de la requête
-              showLoader();
+             /*  showLoader(); */
 
               // Envoie une requête POST avec les données du formulaire
               $.post(url, data, function(response) {
                   // Cacher le loader une fois la réponse reçue
-                  hideLoader();
+                /*   hideLoader(); */
                   
                   console.log(response); // Affiche la réponse dans la console
                   if (response === 'ok') {
-                      Swal.fire({
-                          icon: 'success',
-                          title: 'Succès',
-                          text: 'Un lien de connexion vous a été envoyé par email.',
-                      }).then(() => {
-                          window.location.href = 'verification-email.php';
-                      });
+                  
+                    
+                          Swal.fire({
+                              icon: 'success',
+                              title: 'Succès',
+                              text: 'Un lien de connexion vous a été envoyé par email.',
+                          }).then(() => {
+                              window.location.href = 'verification-email.php';
+                          });
+                     
                   } 
 
                   if (response === '2') {

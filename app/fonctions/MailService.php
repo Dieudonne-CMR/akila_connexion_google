@@ -1,5 +1,6 @@
 <?php
 include_once '../../@ressouce/class.db.php';
+include_once "auth-google/google-client.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require_once "../../vendor/autoload.php";
@@ -116,8 +117,8 @@ class EmailService {
         $token = $this->generateSecureToken($email);
         
         // Construire l'URL sécurisée
-        $baseUrl = in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1']) ? $_ENV['GOOGLE_REDIRECT_URI'] : $_ENV['GOOGLE_REDIRECT_URI_SERVER'];
-        $verifyUrl = "$baseUrl/verify.php?token=$token&email=" . urlencode($email) . "&action=$action";
+        $baseUrl = BASE_URL;
+        $verifyUrl = "$baseUrl/app/processings/verify.php?token=$token&email=" . urlencode($email) . "&action=$action";
         
         // Stocker les données d'utilisateur en session si c'est une inscription
         if ($action === 'register' && !empty($userData)) {
@@ -131,25 +132,25 @@ class EmailService {
         
         // Déterminer le sujet et le contenu selon l'action
         if ($action === 'register') {
-            $subject = "🌟 Bienvenue sur Akila Web Factory - Confirmez votre inscription";
-            $headerTitle = "Bienvenue chez Akila Web Factory !";
+            $subject = "🌟 Bienvenue sur Akila Blog Factory - Votre aventure commence ici";
+            $headerTitle = "Bienvenue dans la communauté Akila Blog Factory";
             $messageContent = "
-                <p>Merci de vous être inscrit sur notre plateforme de santé et bien-être. Pour finaliser votre inscription et accéder à nos services, veuillez cliquer sur le bouton ci-dessous :</p>
+                <p>Nous sommes ravis de vous accueillir dans notre communauté de créateurs de contenu ! Pour commencer votre voyage avec nous, veuillez confirmer votre inscription en cliquant sur le bouton ci-dessous :</p>
                 <div class='btn-container'>
-                    <a href='$verifyUrl' class='btn'>✅ Confirmer mon inscription</a>
+                    <a href='$verifyUrl' class='btn'>🚀 Démarrer mon aventure</a>
                 </div>
                 <p class='info'>Ce lien est valable pendant 24 heures. Si vous n'avez pas demandé à créer un compte, veuillez ignorer cet email.</p>";
-            $buttonText = "Confirmer mon inscription";
+            $buttonText = "Démarrer mon aventure";
         } else {
-            $subject = "🔐 Connexion à AKILA WEB FACTORY";
-            $headerTitle = "Connexion sécurisée";
+            $subject = "🔐 Connexion à votre espace Akila Blog Factory";
+            $headerTitle = "Connexion sécurisée à votre espace";
             $messageContent = "
-                <p>Vous avez demandé à vous connecter à votre compte YEMAK WELLNESS. Cliquez sur le bouton ci-dessous pour vous connecter en toute sécurité :</p>
+                <p>Vous avez demandé à accéder à votre espace créateur sur Akila Blog Factory. Cliquez sur le bouton ci-dessous pour vous connecter en toute sécurité :</p>
                 <div class='btn-container'>
-                    <a href='$verifyUrl' class='btn'>🔓 Me connecter maintenant</a>
+                    <a href='$verifyUrl' class='btn'>🔓 Accéder à mon espace</a>
                 </div>
                 <p class='info'>Ce lien est valable pendant 24 heures et ne peut être utilisé qu'une seule fois. Si vous n'avez pas demandé à vous connecter, veuillez ignorer cet email et vérifier la sécurité de votre compte.</p>";
-            $buttonText = "Me connecter";
+            $buttonText = "Accéder à mon espace";
         }
         
         // Créer le template HTML complet
@@ -163,8 +164,8 @@ class EmailService {
                 body { 
                     font-family: 'Plus Jakarta Sans', Arial, sans-serif; 
                     line-height: 1.6; 
-                    color: #333;
-                    background-color: #f5f6fa;
+                    color: #2d3748;
+                    background-color: #f7fafc;
                     margin: 0;
                     padding: 0;
                 }
@@ -172,111 +173,128 @@ class EmailService {
                     max-width: 600px; 
                     margin: 20px auto; 
                     padding: 0;
-                    border-radius: 12px;
+                    border-radius: 16px;
                     overflow: hidden;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
                     background-color: #ffffff;
                 }
                 .header { 
-                    background-color: #f59e0b; 
-                    background-image: linear-gradient(135deg, #f59e0b, #1e7e34);
+                    background: linear-gradient(135deg, #4f46e5, #7c3aed);
                     color: white; 
-                    padding: 30px 20px; 
+                    padding: 40px 20px; 
                     text-align: center;
                 }
                 .header h1 {
                     margin: 0;
-                    font-weight: 700;
-                    font-size: 28px;
+                    font-weight: 800;
+                    font-size: 32px;
                     letter-spacing: -0.5px;
                 }
                 .content { 
-                    padding: 35px; 
+                    padding: 40px; 
                 }
                 .welcome-text {
                     font-size: 18px;
-                    margin-bottom: 25px;
-                    color: #4b5563;
+                    margin-bottom: 30px;
+                    color: #4a5568;
                 }
                 .name {
                     font-weight: 700;
-                    color: #111827;
+                    color: #2d3748;
                 }
                 .info {
-                    margin: 25px 0;
+                    margin: 30px 0;
                     font-size: 15px;
-                    color: #6b7280;
-                    padding: 15px;
+                    color: #4a5568;
+                    padding: 20px;
                     background-color: #f8fafc;
-                    border-radius: 8px;
-                    border-left: 4px solid #f59e0b;
+                    border-radius: 12px;
+                    border-left: 4px solid #4f46e5;
                 }
                 .btn-container {
                     text-align: center;
-                    margin: 35px 0;
+                    margin: 40px 0;
                 }
                 .btn {
                     display: inline-block;
-                    background-color: #f59e0b;
-                    background-image: linear-gradient(135deg, #f59e0b, #1e7e34);
+                    background: linear-gradient(135deg, #4f46e5, #7c3aed);
                     color: white;
-                    padding: 14px 30px;
+                    padding: 16px 32px;
                     text-decoration: none;
-                    border-radius: 8px;
+                    border-radius: 12px;
                     font-weight: 600;
                     font-size: 16px;
-                    box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
-                    transition: all 0.2s ease;
+                    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+                    transition: all 0.3s ease;
                 }
                 .btn:hover {
                     transform: translateY(-2px);
-                    box-shadow: 0 5px 12px rgba(40, 167, 69, 0.4);
+                    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.3);
                 }
                 .footer { 
                     text-align: center; 
-                    padding: 25px;
+                    padding: 30px;
                     background-color: #f8fafc;
-                    border-top: 1px solid #e5e7eb;
+                    border-top: 1px solid #e2e8f0;
                     font-size: 14px;
-                    color: #6b7280;
+                    color: #4a5568;
                 }
                 .footer p {
-                    margin: 5px 0;
+                    margin: 8px 0;
                 }
                 .logo {
-                    margin-bottom: 15px;
+                    margin-bottom: 20px;
                 }
                 .logo img {
-                    width: 120px;
+                    width: 150px;
                     height: auto;
                 }
                 .divider {
                     height: 1px;
-                    background-color: #e5e7eb;
-                    margin: 25px 0;
+                    background-color: #e2e8f0;
+                    margin: 30px 0;
                 }
                 .social-links {
-                    margin: 20px 0;
+                    margin: 25px 0;
                 }
                 .social-links a {
                     display: inline-block;
-                    margin: 0 8px;
-                    color: #6b7280;
+                    margin: 0 10px;
+                    color: #4f46e5;
                     text-decoration: none;
+                    font-weight: 500;
+                    transition: color 0.3s ease;
                 }
                 .social-links a:hover {
-                    color: #f59e0b;
+                    color: #7c3aed;
                 }
                 .highlight {
-                    color: #f59e0b;
+                    color: #4f46e5;
                     font-weight: 600;
                 }
                 .expiry-notice {
-                    font-size: 13px;
-                    color: #6b7280;
+                    font-size: 14px;
+                    color: #718096;
                     font-style: italic;
                     text-align: center;
-                    margin-top: 15px;
+                    margin-top: 20px;
+                }
+                .features {
+                    margin: 30px 0;
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 20px;
+                }
+                .feature-item {
+                    background: #f8fafc;
+                    padding: 15px;
+                    border-radius: 8px;
+                    text-align: center;
+                }
+                .feature-icon {
+                    font-size: 24px;
+                    margin-bottom: 10px;
+                    color: #4f46e5;
                 }
             </style>
         </head>
@@ -284,7 +302,7 @@ class EmailService {
             <div class='container'>
                 <div class='header'>
                     <div class='logo'>
-                        <img src='https://yemak-wellness.com/assets/images/ye.png' alt='AKILA BLOG FACTORY'>
+                        <img src='https://akila-blog-factory.com/assets/images/logo.png' alt='AKILA BLOG FACTORY'>
                     </div>
                     <h1>$headerTitle</h1>
                 </div>
@@ -293,18 +311,29 @@ class EmailService {
                     
                     $messageContent
                     
+                    <div class='features'>
+                        <div class='feature-item'>
+                            <div class='feature-icon'>📝</div>
+                            <p>Créez des blogs professionnels</p>
+                        </div>
+                        <div class='feature-item'>
+                            <div class='feature-icon'>🚀</div>
+                            <p>Optimisez votre visibilité</p>
+                        </div>
+                    </div>
+                    
                     <div class='divider'></div>
                     
-                    <p>Chez <span class='highlight'>AKILA BLOG FACTORY</span>, nous sommes dédiés à vous offrir les meilleurs services de santé et bien-être. 🌿</p>
+                    <p>Chez <span class='highlight'>AKILA BLOG FACTORY</span>, nous vous accompagnons dans la création de votre présence en ligne professionnelle. 🌟</p>
                     
                     <p class='expiry-notice'>Ce lien expirera dans 24 heures pour des raisons de sécurité.</p>
                 </div>
                 <div class='footer'>
-                    <p>Si vous avez des questions, n'hésitez pas à nous contacter.</p>
+                    <p>Besoin d'aide ? Notre équipe est là pour vous accompagner.</p>
                     <div class='social-links'>
-                        <a href='https://www.facebook.com/yemaksantebeaute/' target='_blank'>Facebook</a> •
-                        <a href='https://www.instagram.com/yemaksantebeaute/' target='_blank'>Instagram</a> •
-                        <a href='https://yemak-wellness.com/contact' target='_blank'>Contact</a>
+                        <a href='https://www.facebook.com/akilablogfactory' target='_blank'>Facebook</a> •
+                        <a href='https://www.instagram.com/akilablogfactory' target='_blank'>Instagram</a> •
+                        <a href='https://akila-blog-factory.com/contact' target='_blank'>Contact</a>
                     </div>
                     <p>&copy; " . date('Y') . " AKILA BLOG FACTORY. Tous droits réservés.</p>
                 </div>
